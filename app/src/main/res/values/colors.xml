@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+
+    <!-- Global Color -->
+    <color name="app.primary">#017978</color>
+    <color name="app.primary.dark">#005454</color>
+    <color name="app.accent">#339393</color>
+    <color name="app.background">#DEDEDE</color>
+
+    <!-- Font Color -->
+    <color name="font.light.primary">#ffffff</color>
+
 </resources>
