@@ -1,7 +1,9 @@
-package cl.mzapatae.mobileapp;
+package cl.mzapatae.mobileapp.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import cl.mzapatae.mobileapp.R;
 
 public class SplashActivity extends AppCompatActivity {
 
