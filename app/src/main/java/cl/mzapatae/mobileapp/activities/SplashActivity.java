@@ -1,5 +1,6 @@
 package cl.mzapatae.mobileapp.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -27,19 +28,18 @@ public class SplashActivity extends AppCompatActivity {
                     //initMainScreen();
                 }
                 else {
-                    //initLoginScreen();
+                    initLandingScreen();
                 }
             }
         }, 1500); //Stay splash for 1.5 seg
     }
 
-    /*
-    private void initLoginScreen() {
+    private void initLandingScreen() {
         Intent intent = new Intent().setClass(SplashActivity.this, LandingActivity.class);
         startActivity(intent);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         finishAffinity();
-    }*/
+    }
 
     /*
     private void initMainScreen() {

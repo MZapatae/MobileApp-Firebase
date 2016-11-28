@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">MobileApp</string>
+
+    <string name="textview_welcome">Bienvenido</string>
+
+    <string name="button_login">Ingresar</string>
+    <string name="button_register">Registrar</string>
+
+    <string name="edittext_email_hint">Email</string>
+    <string name="edittext_password_hint">Contraseña</string>
+
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

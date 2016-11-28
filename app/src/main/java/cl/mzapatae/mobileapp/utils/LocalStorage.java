@@ -6,11 +6,12 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 /**
+ * Class to manage persistent data in application
+ *
  * @author Miguel A. Zapata - MZapatae
  * @version 1.0
  * Created on: 25-11-16
  * E-mail: miguel.zapatae@gmail.com
- * Extract: Class to manage persistent data in application
  */
 
 public class LocalStorage {

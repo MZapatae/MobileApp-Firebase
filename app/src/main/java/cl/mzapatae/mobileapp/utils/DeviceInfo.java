@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.os.Build;
 import android.provider.Settings;
-import android.provider.SyncStateContract;
 import android.util.Base64;
 import android.util.Log;
 
@@ -15,11 +14,12 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
+ * This class, return all device data. Version Apps, Model Name, Android id, Android Version
+ *
  * @author Miguel A. Zapata - MZapatae
  * @version 1.0
  * Created on: 25-11-16
  * E-mail: miguel.zapatae@gmail.com
- * Extract: This class, return all device data. Version Apps, Model Name, Android id, Android Version
  */
 
 public class DeviceInfo {
