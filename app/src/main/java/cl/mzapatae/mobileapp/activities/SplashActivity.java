@@ -25,7 +25,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
                 if (LocalStorage.isUserLogged()) {
-                    //initMainScreen();
+                    initMainScreen();
                 }
                 else {
                     initLandingScreen();
@@ -41,13 +41,13 @@ public class SplashActivity extends AppCompatActivity {
         finishAffinity();
     }
 
-    /*
+
     private void initMainScreen() {
         Intent intent = new Intent().setClass(SplashActivity.this, MainActivity.class);
         startActivity(intent);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         finishAffinity();
-    }*/
+    }
 
     private void ConfigureApp() {
         //Put Fabric config here!
