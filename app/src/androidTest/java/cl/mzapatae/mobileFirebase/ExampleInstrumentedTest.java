@@ -1,4 +1,4 @@
-package cl.mzapatae.mobileapp;
+package cl.mzapatae.mobileFirebase;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

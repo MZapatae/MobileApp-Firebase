@@ -1,10 +1,10 @@
-package cl.mzapatae.mobileapp.base;
+package cl.mzapatae.mobileFirebase.base;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 
-import cl.mzapatae.mobileapp.R;
-import cl.mzapatae.mobileapp.enums.Animation;
+import cl.mzapatae.mobileFirebase.R;
+import cl.mzapatae.mobileFirebase.enums.Animation;
 
 /**
  * Base fragment created to be extended by every fragment in this application. This class provides

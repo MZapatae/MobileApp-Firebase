@@ -1,13 +1,13 @@
-package cl.mzapatae.mobileapp.activities;
+package cl.mzapatae.mobileFirebase.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 
-import cl.mzapatae.mobileapp.R;
-import cl.mzapatae.mobileapp.utils.DeviceInfo;
-import cl.mzapatae.mobileapp.utils.LocalStorage;
+import cl.mzapatae.mobileFirebase.R;
+import cl.mzapatae.mobileFirebase.utils.DeviceInfo;
+import cl.mzapatae.mobileFirebase.utils.LocalStorage;
 
 public class SplashActivity extends AppCompatActivity {
 
