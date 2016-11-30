@@ -18,16 +18,20 @@ public class LocalStorage {
     private static final String TAG = "LocalStorage";
 
     private static final String PREF_STORAGE_FILE = "mobileFirebase.storage";
-    private static final String PREF_LOGGED_IN = "userLoggedIn";
 
     private static final String PREF_APP_NAME = "appName";
-    private static final String PREF_TOKEN_ID = "tokenId";
     private static final String PREF_DEVICE_ID = "deviceId";
     private static final String PREF_TOKEN_PUSH = "tokenPush";
     private static final String PREF_VERSION_APP = "appVersion";
     private static final String PREF_MODEL_DEVICE = "modelDevice";
     private static final String PREF_ANDROID_VERSION = "androidVersion";
     private static final String PREF_MANUFACTURER_DEVICE = "manufacturerDevice";
+
+    private static final String PREF_LOGGED_IN = "userLoggedIn";
+    private static final String PREF_USER_UID = "userUid";
+    private static final String PREF_USER_NAME = "userDisplayName";
+    private static final String PREF_USER_EMAIL = "userEmail";
+    private static final String PREF_USER_TOKEN = "userTokenId";
 
     private static SharedPreferences SHARED_PREFERENCE;
 
@@ -36,14 +40,17 @@ public class LocalStorage {
         Log.i(TAG, "Local Storage Init Sucess");
     }
 
-    public static void loginUser(String userToken) {
+    public static void loginUser(String uid, String displayName, String email, String userToken) {
         SHARED_PREFERENCE.edit().putBoolean(PREF_LOGGED_IN, true).apply();
-        SHARED_PREFERENCE.edit().putString(PREF_TOKEN_ID, userToken).apply();
+        SHARED_PREFERENCE.edit().putString(PREF_USER_TOKEN, userToken).apply();
+        SHARED_PREFERENCE.edit().putString(PREF_USER_UID, uid).apply();
+        SHARED_PREFERENCE.edit().putString(PREF_USER_NAME, displayName).apply();
+        SHARED_PREFERENCE.edit().putString(PREF_USER_EMAIL, email).apply();
     }
 
     public static void logoutUser() {
         SHARED_PREFERENCE.edit().putBoolean(PREF_LOGGED_IN, false).apply();
-        SHARED_PREFERENCE.edit().remove(PREF_TOKEN_ID).apply();
+        SHARED_PREFERENCE.edit().remove(PREF_USER_TOKEN).apply();
     }
 
     public static void setDeviceId(String deviceId) {
@@ -79,7 +86,7 @@ public class LocalStorage {
     }
 
     public static String getUserTokenId() {
-        return SHARED_PREFERENCE.getString(PREF_TOKEN_ID, "");
+        return SHARED_PREFERENCE.getString(PREF_USER_TOKEN, "");
     }
 
     public static String getDeviceId() {
