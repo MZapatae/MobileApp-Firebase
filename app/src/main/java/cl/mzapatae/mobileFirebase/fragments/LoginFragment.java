@@ -2,6 +2,7 @@ package cl.mzapatae.mobileFirebase.fragments;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -17,16 +18,25 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
-import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cl.mzapatae.mobileFirebase.BuildConfig;
 import cl.mzapatae.mobileFirebase.R;
+import cl.mzapatae.mobileFirebase.activities.MainActivity;
 import cl.mzapatae.mobileFirebase.base.FragmentBase;
+import cl.mzapatae.mobileFirebase.objets.User;
 import cl.mzapatae.mobileFirebase.utils.LocalStorage;
 
 /**
@@ -41,8 +51,8 @@ public class LoginFragment extends FragmentBase {
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private DatabaseReference mDatabase;
     private Context mContext;
-
     private String mUserUID = null;
     private String mUserEmail = null;
     private String mUserProviderID = null;
@@ -67,6 +77,7 @@ public class LoginFragment extends FragmentBase {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
         FireBaseAuthListener();
     }
 
@@ -101,39 +112,62 @@ public class LoginFragment extends FragmentBase {
         }
     }
 
-    /*
-    private void createUser(String email, String password) {
-        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
-
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
-                        if (!task.isSuccessful()) {
-                            Toast.makeText(mContext, "Authentication failed.", Toast.LENGTH_SHORT).show();
-                        }
-                        // ...
-                    }
-                });
-    }*/
-
     private void signInUser(String email, String password) {
-        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                Log.d(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
+        try {
+            mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    Log.d(TAG, "signInUser:onComplete:" + task.isSuccessful());
 
-                // If sign in fails, display a message to the user. If sign in succeeds
-                // the auth state listener will be notified and logic to handle the
-                // signed in user can be handled in the listener.
-                if (!task.isSuccessful()) {
-                    Log.w(TAG, "signInWithEmail", task.getException());
-                    Toast.makeText(mContext, "Authentication failed: SignUserTask Exception.", Toast.LENGTH_SHORT).show();
+                    if (task.isSuccessful()) {
+                        Log.w(TAG, "signInUser Success!");
+                        Toast.makeText(mContext, "Login Exitoso!", Toast.LENGTH_SHORT).show();
+
+                    } else {
+                        Log.w(TAG, "signInUser Fail!: ", task.getException());
+                        try {
+                            throw task.getException();
+                        } catch (FirebaseAuthWeakPasswordException e) {
+                            mEditPassword.setError(getString(R.string.error_weak_password));
+                            mEditPassword.requestFocus();
+                            Toast.makeText(mContext, R.string.error_weak_password, Toast.LENGTH_SHORT).show();
+
+                        } catch (FirebaseAuthInvalidCredentialsException e) {
+                            mEditPassword.setError(getString(R.string.error_invalid_password));
+                            mEditPassword.requestFocus();
+                            Toast.makeText(mContext, R.string.error_invalid_password, Toast.LENGTH_SHORT).show();
+
+                        } catch (FirebaseAuthUserCollisionException e) {
+                            mEditEmail.setError(getString(R.string.error_user_exists));
+                            mEditEmail.requestFocus();
+                            Toast.makeText(mContext, R.string.error_user_exists, Toast.LENGTH_SHORT).show();
+
+                        } catch (FirebaseAuthInvalidUserException e) {
+                            mEditEmail.setError(getString(R.string.error_user_not_exists));
+                            mEditEmail.requestFocus();
+                            Toast.makeText(mContext, R.string.error_user_not_exists, Toast.LENGTH_SHORT).show();
+
+                        } catch (Exception e) {
+                            Log.e(TAG, e.getMessage());
+                            Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
                 }
+            });
+        } catch (IllegalArgumentException e) {
+            if (email == null || email.equals("")) {
+                mEditEmail.setError(getString(R.string.error_blank_email));
+                Toast.makeText(mContext, R.string.error_blank_email, Toast.LENGTH_SHORT).show();
             }
-        });
+            if (password == null || password.equals("")) {
+                mEditPassword.setError(getString(R.string.error_blank_password));
+                Toast.makeText(mContext, R.string.error_blank_password, Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+            Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void FireBaseAuthListener() {
@@ -154,13 +188,32 @@ public class LoginFragment extends FragmentBase {
                                 mUserProviderID = user.getProviderId();
                                 if (user.getPhotoUrl() != null) mUserPhotoUrl = user.getPhotoUrl().toString();
 
-                                if (BuildConfig.DEBUG) {
-                                    Log.d(TAG, "1:" + mUserUID);
-                                    Log.d(TAG, "2:" + mUserEmail);
-                                    Log.d(TAG, "3:" + mUserProviderID);
-                                    Log.d(TAG, "4:" + mUserPhotoUrl);
-                                    Log.d(TAG, "5:" + mUserToken);
-                                }
+                                mDatabase.child("users").child(mUserUID).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        User user = dataSnapshot.getValue(User.class);
+                                        LocalStorage.loginUser(
+                                                mUserUID,
+                                                mUserEmail,
+                                                user.getFirstName(),
+                                                user.getLastName(),
+                                                user.getUserName(),
+                                                user.getAvatar(),
+                                                mUserProviderID,
+                                                mUserToken
+                                        );
+
+                                        Intent intent = new Intent().setClass(mContext, MainActivity.class);
+                                        startActivity(intent);
+                                        getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                                        getActivity().finishAffinity();
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
                             } else {
                                 Toast.makeText(mContext, "Authentication failed: GetTokenTask Exception.", Toast.LENGTH_SHORT).show();
                             }
