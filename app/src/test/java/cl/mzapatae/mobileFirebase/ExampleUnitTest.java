@@ -2,6 +2,8 @@ package cl.mzapatae.mobileFirebase;
 
 import org.junit.Test;
 
+import cl.mzapatae.mobileFirebase.utils.FormValidator;
+
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -14,4 +16,5 @@ public class ExampleUnitTest {
     public void addition_isCorrect() throws Exception {
         assertEquals(4, 2 + 2);
     }
+
 }

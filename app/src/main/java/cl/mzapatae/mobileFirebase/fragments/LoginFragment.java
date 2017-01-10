@@ -31,8 +31,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.Normalizer;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -42,6 +40,7 @@ import cl.mzapatae.mobileFirebase.base.FragmentBase;
 import cl.mzapatae.mobileFirebase.objets.User;
 import cl.mzapatae.mobileFirebase.utils.FormValidator;
 import cl.mzapatae.mobileFirebase.utils.LocalStorage;
+import cl.mzapatae.mobileFirebase.utils.DialogManager;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -113,19 +112,50 @@ public class LoginFragment extends FragmentBase {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.button_login:
-                signInUser(mEditEmail.getText().toString().trim(), mEditPassword.getText().toString().trim());
+                if (isLoginValid()) {
+                    signInUser(mEditEmail.getText().toString(), mEditPassword.getText().toString());
+                }
                 break;
         }
     }
 
+    private boolean isLoginValid() {
+        String emailValue = mEditEmail.getText().toString().trim();
+        String passwordValue = mEditPassword.getText().toString().trim();
+
+        mEditEmail.setText(emailValue);
+        mEditPassword.setText(passwordValue);
+
+        Log.d(TAG, "Validate Email: " + emailValue);
+        if (!FormValidator.isValidEmail(emailValue)) {
+            mEditLayoutEmail.setError(getString(R.string.error_invalid_email));
+            mEditLayoutEmail.requestFocus();
+            mEditEmail.setSelection(emailValue.length());
+            Log.d(TAG, "Validation: Fail!");
+            Log.i(TAG, "Login Form is Invalid!");
+            return false;
+        } else {
+            Log.d(TAG, "Validation: Success!");
+            mEditLayoutEmail.setErrorEnabled(false);
+        }
+
+        Log.d(TAG, "Validate Password...");
+        if (!FormValidator.isValidPassword(passwordValue)) {
+            mEditLayoutPassword.setError(getString(R.string.error_invalid_password));
+            mEditLayoutEmail.requestFocus();
+            mEditPassword.setSelection(passwordValue.length());
+            Log.d(TAG, "Validation: Fail!");
+            Log.i(TAG, "Login Form is Invalid!");
+            return false;
+        } else {
+            Log.d(TAG, "Validation: Success!");
+            mEditLayoutPassword.setErrorEnabled(false);
+        }
+        Log.i(TAG, "Login Form is Valid!");
+        return true;
+    }
+
     private void signInUser(String email, String password) {
-        
-        mEditEmail.setText(email);
-        mEditPassword.setText(password);
-
-        if (!FormValidator.validateEmail(mContext, email, mEditLayoutEmail)) return;
-        if (!FormValidator.validatePassword(mContext, password, mEditLayoutPassword)) return;
-
         try {
             mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                 @Override
@@ -140,22 +170,22 @@ public class LoginFragment extends FragmentBase {
                         try {
                             throw task.getException();
                         } catch (FirebaseAuthWeakPasswordException e) {
-                            mEditLayoutPassword.setError(getString(R.string.error_weak_password));
+                            DialogManager.showAlertSimple(mContext, R.string.error_weak_password);
                             mEditPassword.setSelection(mEditPassword.getText().length());
                             mEditPassword.requestFocus();
 
                         } catch (FirebaseAuthInvalidCredentialsException e) {
-                            mEditLayoutPassword.setError(getString(R.string.error_invalid_password));
+                            DialogManager.showAlertSimple(mContext, R.string.error_invalid_password);
                             mEditPassword.setSelection(mEditPassword.getText().length());
                             mEditPassword.requestFocus();
 
                         } catch (FirebaseAuthUserCollisionException e) {
-                            mEditLayoutEmail.setError(getString(R.string.error_user_exists));
+                            DialogManager.showAlertSimple(mContext, R.string.error_user_exists);
                             mEditEmail.setSelection(mEditEmail.getText().length());
                             mEditEmail.requestFocus();
 
                         } catch (FirebaseAuthInvalidUserException e) {
-                            mEditLayoutEmail.setError(getString(R.string.error_user_not_exists));
+                            DialogManager.showAlertSimple(mContext, R.string.error_user_not_exists);
                             mEditEmail.setSelection(mEditEmail.getText().length());
                             mEditEmail.requestFocus();
 
@@ -163,7 +193,6 @@ public class LoginFragment extends FragmentBase {
                             Log.e(TAG, e.getMessage());
                             Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
-
                     }
                 }
             });
