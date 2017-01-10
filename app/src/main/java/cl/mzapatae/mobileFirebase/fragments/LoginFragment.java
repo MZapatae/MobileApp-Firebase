@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -37,7 +39,9 @@ import cl.mzapatae.mobileFirebase.R;
 import cl.mzapatae.mobileFirebase.activities.MainActivity;
 import cl.mzapatae.mobileFirebase.base.FragmentBase;
 import cl.mzapatae.mobileFirebase.objets.User;
+import cl.mzapatae.mobileFirebase.utils.CustomTextWatcher;
 import cl.mzapatae.mobileFirebase.utils.LocalStorage;
+import cl.mzapatae.mobileFirebase.utils.FormValidator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,9 +49,11 @@ import cl.mzapatae.mobileFirebase.utils.LocalStorage;
 public class LoginFragment extends FragmentBase {
     private static final String TAG = "Login Fragment";
 
-    @BindView(R.id.edit_email) EditText mEditEmail;
-    @BindView(R.id.edit_password) EditText mEditPassword;
+    @BindView(R.id.edit_email) TextInputEditText mEditEmail;
+    @BindView(R.id.edit_password) TextInputEditText mEditPassword;
     @BindView(R.id.button_login) Button mButtonLogin;
+    @BindView(R.id.edit_layout_email) TextInputLayout mEditLayoutEmail;
+    @BindView(R.id.edit_layout_password) TextInputLayout mEditLayoutPassword;
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -86,6 +92,9 @@ public class LoginFragment extends FragmentBase {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
         ButterKnife.bind(this, view);
         mContext = getContext();
+
+        mEditEmail.addTextChangedListener(new CustomTextWatcher(mContext, mEditEmail, mEditLayoutEmail));
+        mEditPassword.addTextChangedListener(new CustomTextWatcher(mContext, mEditPassword, mEditLayoutPassword));
         return view;
     }
 
@@ -107,18 +116,26 @@ public class LoginFragment extends FragmentBase {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.button_login:
-                signInUser(mEditEmail.getText().toString().trim(), mEditPassword.getText().toString().trim());
+                /* Clean Blank Characteres and setup again in Textfields */
+                String email = mEditEmail.getText().toString().trim();
+                String pass = mEditPassword.getText().toString().trim();
+                mEditEmail.setText(email);
+                mEditPassword.setText(pass);
+
+                signInUser(email, pass);
                 break;
         }
     }
 
     private void signInUser(String email, String password) {
+        if (!FormValidator.validateEmail(mContext, email, mEditLayoutEmail)) return;
+        if (!FormValidator.validatePassword(mContext, password, mEditLayoutPassword)) return;
+
         try {
-            mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+            mAuth.signInWithEmailAndPassword(email.trim(), password.trim()).addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     Log.d(TAG, "signInUser:onComplete:" + task.isSuccessful());
-
                     if (task.isSuccessful()) {
                         Log.w(TAG, "signInUser Success!");
                         Toast.makeText(mContext, "Login Exitoso!", Toast.LENGTH_SHORT).show();
@@ -129,21 +146,25 @@ public class LoginFragment extends FragmentBase {
                             throw task.getException();
                         } catch (FirebaseAuthWeakPasswordException e) {
                             mEditPassword.setError(getString(R.string.error_weak_password));
+                            mEditPassword.setSelection(mEditPassword.getText().length());
                             mEditPassword.requestFocus();
                             Toast.makeText(mContext, R.string.error_weak_password, Toast.LENGTH_SHORT).show();
 
                         } catch (FirebaseAuthInvalidCredentialsException e) {
                             mEditPassword.setError(getString(R.string.error_invalid_password));
+                            mEditPassword.setSelection(mEditPassword.getText().length());
                             mEditPassword.requestFocus();
                             Toast.makeText(mContext, R.string.error_invalid_password, Toast.LENGTH_SHORT).show();
 
                         } catch (FirebaseAuthUserCollisionException e) {
                             mEditEmail.setError(getString(R.string.error_user_exists));
+                            mEditEmail.setSelection(mEditEmail.getText().length());
                             mEditEmail.requestFocus();
                             Toast.makeText(mContext, R.string.error_user_exists, Toast.LENGTH_SHORT).show();
 
                         } catch (FirebaseAuthInvalidUserException e) {
                             mEditEmail.setError(getString(R.string.error_user_not_exists));
+                            mEditEmail.setSelection(mEditEmail.getText().length());
                             mEditEmail.requestFocus();
                             Toast.makeText(mContext, R.string.error_user_not_exists, Toast.LENGTH_SHORT).show();
 
@@ -155,15 +176,6 @@ public class LoginFragment extends FragmentBase {
                     }
                 }
             });
-        } catch (IllegalArgumentException e) {
-            if (email == null || email.equals("")) {
-                mEditEmail.setError(getString(R.string.error_blank_email));
-                Toast.makeText(mContext, R.string.error_blank_email, Toast.LENGTH_SHORT).show();
-            }
-            if (password == null || password.equals("")) {
-                mEditPassword.setError(getString(R.string.error_blank_password));
-                Toast.makeText(mContext, R.string.error_blank_password, Toast.LENGTH_SHORT).show();
-            }
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
             Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -186,7 +198,8 @@ public class LoginFragment extends FragmentBase {
                                 mUserUID = user.getUid();
                                 mUserEmail = user.getEmail();
                                 mUserProviderID = user.getProviderId();
-                                if (user.getPhotoUrl() != null) mUserPhotoUrl = user.getPhotoUrl().toString();
+                                if (user.getPhotoUrl() != null)
+                                    mUserPhotoUrl = user.getPhotoUrl().toString();
 
                                 mDatabase.child("users").child(mUserUID).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
