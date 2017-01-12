@@ -38,9 +38,4 @@ public class InstrumentedTest {
     public void formValidator_IncorrectEmail_ReturnsFalse() {
         Assert.assertThat(FormValidator.isValidEmail("mzapataeicloud.com"), is(false));
     }
-
-    @Test
-    public void formValidator_ValidPassword_ReturnsTrue() {
-        Assert.assertThat(FormValidator.isValidPassword("asdfgasdfg"), is(true));
-    }
 }

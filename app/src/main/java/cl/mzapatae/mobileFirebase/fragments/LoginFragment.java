@@ -208,7 +208,6 @@ public class LoginFragment extends FragmentBase {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 final FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-
                     // User is signed in
                     user.getToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
                         @Override

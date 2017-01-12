@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -43,11 +44,11 @@ public class RegisterFragment extends Fragment {
     private static final String TAG = "MobileApp - Register";
 
     @BindView(R.id.text_title) TextView mTextTitle;
-    @BindView(R.id.edit_name) EditText mEditName;
-    @BindView(R.id.edit_lastname) EditText mEditLastname;
-    @BindView(R.id.edit_email) EditText mEditEmail;
-    @BindView(R.id.edit_borndate) EditText mEditUsername;
-    @BindView(R.id.edit_password) EditText mEditPassword;
+    @BindView(R.id.edit_name) TextInputEditText mEditName;
+    @BindView(R.id.edit_lastname) TextInputEditText mEditLastname;
+    @BindView(R.id.edit_email) TextInputEditText mEditEmail;
+    @BindView(R.id.edit_username) TextInputEditText mEditUsername;
+    @BindView(R.id.edit_password) TextInputEditText mEditPassword;
     @BindView(R.id.button_register) Button mButtonRegister;
 
     private FirebaseAuth mAuth;
@@ -103,10 +104,10 @@ public class RegisterFragment extends Fragment {
     @OnClick(R.id.button_register)
     public void onClick() {
         registerUser(mEditName.getText().toString().trim(),
-                    mEditLastname.getText().toString().trim(),
-                    mEditUsername.getText().toString().trim(),
-                    mEditEmail.getText().toString().trim(),
-                    mEditPassword.getText().toString().trim());
+                mEditLastname.getText().toString().trim(),
+                mEditUsername.getText().toString().trim(),
+                mEditEmail.getText().toString().trim(),
+                mEditPassword.getText().toString().trim());
     }
 
     private void registerUser(final String firstName, final String lastName, final String userName, final String email, String password) {
@@ -230,4 +231,3 @@ public class RegisterFragment extends Fragment {
         mDatabase.child("users").child(userId).setValue(user);
     }
 }
-
