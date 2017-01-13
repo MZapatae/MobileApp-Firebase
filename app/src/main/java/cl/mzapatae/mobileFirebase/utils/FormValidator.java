@@ -16,17 +16,12 @@ import java.util.regex.Pattern;
 public class FormValidator {
 
     public static boolean isValidEmail(String email) {
-        //return !(email.isEmpty() || !isValidPatternEmail(email));
         String regex = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
                 + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
         Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(email);
         return (matcher.matches() && !isEmptyText(email));
     }
-
-
-
-    //  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
     public static boolean isValidPassword(String password) {
         String regex = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{6,}$"; //Minimum 6 characters at least 1 Alphabet and 1 Number
