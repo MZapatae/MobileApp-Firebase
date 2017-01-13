@@ -16,33 +16,42 @@ import java.util.regex.Pattern;
 public class FormValidator {
 
     public static boolean isValidEmail(String email) {
-        return !(email.isEmpty() || !isValidPatternEmail(email));
+        //return !(email.isEmpty() || !isValidPatternEmail(email));
+        String regex = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(email);
+        return (matcher.matches() && !isEmptyText(email));
     }
 
+
+
+    //  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+
     public static boolean isValidPassword(String password) {
-        String regx = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{6,}$"; //Minimum 6 characters at least 1 Alphabet and 1 Number
-        Pattern pattern = Pattern.compile(regx);
+        String regex = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{6,}$"; //Minimum 6 characters at least 1 Alphabet and 1 Number
+        Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(password);
         return (matcher.matches() && !isEmptyText(password));
     }
 
     public static boolean isValidName(String name) {
-        String regx = "^[\\p{L} .'-]+$";
-        Pattern pattern = Pattern.compile(regx, Pattern.CASE_INSENSITIVE);
+        String regex = "^[\\p{L} .'-]+$";
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(name);
         return (matcher.find() && !isEmptyText(name));
     }
 
     public static boolean isValidLastName(String lastName) {
-        String regx = "^[\\p{L} .'-]+$";
-        Pattern pattern = Pattern.compile(regx, Pattern.CASE_INSENSITIVE);
+        String regex = "^[\\p{L} .'-]+$";
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(lastName);
         return (matcher.find() && !isEmptyText(lastName));
     }
 
     public static boolean isValidUsername(String username) {
-        String regx = "^[a-zA-Z][a-zA-Z0-9_]{4,15}$"; //Valid Username between 4 and 15 characters
-        Pattern pattern = Pattern.compile(regx);
+        String regex = "^[a-zA-Z][a-zA-Z0-9_]{4,15}$"; //Valid Username between 4 and 15 characters
+        Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(username);
         return (matcher.matches());
     }

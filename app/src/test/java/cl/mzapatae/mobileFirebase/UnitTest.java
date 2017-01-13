@@ -33,7 +33,7 @@ public class UnitTest {
 
         for(String value : validEmails) {
             boolean result = FormValidator.isValidEmail(value);
-            System.out.println("Check Email: " + value + " , " + result);
+            System.out.println("Check Email: " + value + " ---> " + result);
             Assert.assertEquals(true, result);
         }
     }
@@ -48,7 +48,7 @@ public class UnitTest {
 
         for(String value : invalidEmails) {
             boolean result = FormValidator.isValidEmail(value);
-            System.out.println("Check Email: " + value + " , " + result);
+            System.out.println("Check Email: " + value + " ---> " + result);
             Assert.assertEquals(false, result);
         }
     }
@@ -63,7 +63,7 @@ public class UnitTest {
 
         for(String value : validPass) {
             boolean result = FormValidator.isValidPassword(value);
-            System.out.println("Check Password: " + value + " , " + result);
+            System.out.println("Check Password: " + value + " ---> " + result);
             Assert.assertEquals(true, result);
         }
     }
@@ -79,7 +79,7 @@ public class UnitTest {
 
         for(String value : invalidPass) {
             boolean result = FormValidator.isValidPassword(value);
-            System.out.println("Check Password: " + value + " , " + result);
+            System.out.println("Check Password: " + value + " ---> " + result);
             Assert.assertEquals(false, result);
         }
     }
@@ -97,7 +97,7 @@ public class UnitTest {
 
         for(String value : validName) {
             boolean result = FormValidator.isValidName(value);
-            System.out.println("Check Name: " + value + " , " + result);
+            System.out.println("Check Name: " + value + " ---> " + result);
             Assert.assertEquals(true, result);
         }
     }
@@ -114,7 +114,7 @@ public class UnitTest {
 
         for(String value : invalidName) {
             boolean result = FormValidator.isValidName(value);
-            System.out.println("Check Name: " + value + " , " + result);
+            System.out.println("Check Name: " + value + " ---> " + result);
             Assert.assertEquals(false, result);
         }
     }
@@ -148,7 +148,7 @@ public class UnitTest {
 
         for(String value : invalidName) {
             boolean result = FormValidator.isValidLastName(value);
-            System.out.println("Check Lastname: " + value + " , " + result);
+            System.out.println("Check Lastname: " + value + " ---> " + result);
             Assert.assertEquals(false, result);
         }
     }
@@ -165,7 +165,7 @@ public class UnitTest {
 
         for(String value : validName) {
             boolean result = FormValidator.isValidUsername(value);
-            System.out.println("Check Username: " + value + " , " + result);
+            System.out.println("Check Username: " + value + " ---> " + result);
             Assert.assertEquals(true, result);
         }
     }
@@ -175,7 +175,7 @@ public class UnitTest {
         String[] invalidName = new String[]{
                 "",
                 "   ace",
-                "Peter32465Hertym",
+                "asdPeter32465Hertym",
                 "François #¢¬",
                 "_|#∞÷¬∞¢"
         };
