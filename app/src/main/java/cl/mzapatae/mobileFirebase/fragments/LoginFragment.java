@@ -139,7 +139,7 @@ public class LoginFragment extends FragmentBase {
             mEditLayoutEmail.setErrorEnabled(false);
         }
 
-        Log.d(TAG, "Validate Password...");
+        Log.d(TAG, "Validate Password: ********");
         if (!FormValidator.isValidPassword(passwordValue)) {
             mEditLayoutPassword.setError(getString(R.string.error_invalid_password));
             mEditLayoutEmail.requestFocus();
@@ -191,7 +191,7 @@ public class LoginFragment extends FragmentBase {
 
                         } catch (Exception e) {
                             Log.e(TAG, e.getMessage());
-                            Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            DialogManager.showAlertSimple(mContext, e.getMessage());
                         }
                     }
                 }

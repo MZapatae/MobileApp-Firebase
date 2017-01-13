@@ -14,10 +14,18 @@ import cl.mzapatae.mobileFirebase.R;
  */
 
 public class DialogManager {
-    public static void showAlertSimple(Context context, int error_message_resource) {
+    public static void showAlertSimple(Context context, int message_resource) {
         new MaterialDialog.Builder(context)
                 .title(R.string.alert_title_error)
-                .content(error_message_resource)
+                .content(message_resource)
+                .positiveText(R.string.alert_button_accept)
+                .show();
+    }
+
+    public static void showAlertSimple(Context context, String message) {
+        new MaterialDialog.Builder(context)
+                .title(R.string.alert_title_error)
+                .content(message)
                 .positiveText(R.string.alert_button_accept)
                 .show();
     }
