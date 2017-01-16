@@ -38,9 +38,9 @@ import cl.mzapatae.mobileFirebase.R;
 import cl.mzapatae.mobileFirebase.activities.MainActivity;
 import cl.mzapatae.mobileFirebase.base.FragmentBase;
 import cl.mzapatae.mobileFirebase.objets.User;
+import cl.mzapatae.mobileFirebase.utils.DialogManager;
 import cl.mzapatae.mobileFirebase.utils.FormValidator;
 import cl.mzapatae.mobileFirebase.utils.LocalStorage;
-import cl.mzapatae.mobileFirebase.utils.DialogManager;
 
 /**
  * A simple {@link Fragment} subclass.

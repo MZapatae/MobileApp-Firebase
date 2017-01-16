@@ -62,9 +62,6 @@ public class RegisterFragment extends Fragment {
     private DatabaseReference mDatabase;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private Context mContext;
-    private String mFirstName;
-    private String mLastName;
-    private String mUserName;
 
     public RegisterFragment() {
         // Required empty public constructor
@@ -113,11 +110,7 @@ public class RegisterFragment extends Fragment {
         switch (view.getId()) {
             case R.id.button_register:
                 if (isRegisterValid()) {
-                    registerUser(mEditName.getText().toString(),
-                            mEditLastname.getText().toString(),
-                            mEditUsername.getText().toString(),
-                            mEditEmail.getText().toString(),
-                            mEditPassword.getText().toString());
+                    registerUser(mEditEmail.getText().toString(), mEditPassword.getText().toString());
                 }
                 break;
         }
@@ -205,7 +198,7 @@ public class RegisterFragment extends Fragment {
     }
 
 
-    private void registerUser(String firstName, String lastName, String userName, String email, String password) {
+    private void registerUser(String email, String password) {
         try {
             mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                 @Override
@@ -276,8 +269,12 @@ public class RegisterFragment extends Fragment {
                                 if (user.getPhotoUrl() != null)
                                     userAvatarUrl = user.getPhotoUrl().toString();
 
-                                writeUserToDatabase(userUID, userEmail, mFirstName, mLastName, mUserName, userAvatarUrl);
-                                LocalStorage.loginUser(userUID, userEmail, mFirstName, mLastName, mUserName, userAvatarUrl, userProviderID, userToken);
+                                String firstName = mEditName.getText().toString();
+                                String lastName = mEditLastname.getText().toString();
+                                String userName = mEditUsername.getText().toString();
+
+                                writeUserToDatabase(userUID, userEmail, firstName, lastName, userName, userAvatarUrl);
+                                LocalStorage.loginUser(userUID, userEmail, firstName, lastName, userName, userAvatarUrl, userProviderID, userToken);
 
                                 Intent intent = new Intent().setClass(mContext, MainActivity.class);
                                 startActivity(intent);
